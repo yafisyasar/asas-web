@@ -121,7 +121,8 @@ export default async function HomePage() {
 
       {commits.length > 0 && (
         <section className="pb-16">
-          <div className="mb-4 flex items-center gap-2">
+          <div className="max-w-md">
+            <div className="mb-4 flex items-center gap-2">
             <GitCommitHorizontal className="h-4 w-4 text-emerald-400" />
             <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500">
               Latest updates
@@ -142,6 +143,7 @@ export default async function HomePage() {
                 </span>
               </div>
             ))}
+          </div>
           </div>
         </section>
       )}
