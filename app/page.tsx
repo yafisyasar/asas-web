@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import {
   Calculator,
-  GitCommitHorizontal,
+  Clock,
   GraduationCap,
   ScrollText,
   Wrench,
 } from "lucide-react";
 import type { FileNode } from "@/lib/types";
-import { getRecentCommits, getVisibleFiles, hasGitHubToken } from "@/lib/github";
+import { getRecentFiles, getVisibleFiles, hasGitHubToken } from "@/lib/github";
 import { compareFolderNames, summarizeTop } from "@/lib/paths";
 import { FolderGrid } from "@/components/folder-grid";
 import { FileList } from "@/components/file-list";
+import { FileIcon, FileBadge } from "@/components/file-icon";
 
 export const metadata: Metadata = {
   title: "ASAS-WEB",
@@ -42,7 +44,7 @@ export default async function HomePage() {
   const semesters = summarizeTop(files)
     .filter((s) => /^sem/i.test(s.name))
     .sort((a, b) => compareFolderNames(a.name, b.name));
-  const commits = await getRecentCommits();
+  const recentFiles = (await getRecentFiles()).filter((rf) => files.some((f) => f.pathname === rf.path));
 
   const rootFiles: FileNode[] = files.filter((f) => !f.pathname.includes("/")).map(toNode);
 
@@ -119,31 +121,36 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {commits.length > 0 && (
+{recentFiles.length > 0 && (
         <section className="pb-16">
-          <div className="max-w-md">
-            <div className="mb-4 flex items-center gap-2">
-            <GitCommitHorizontal className="h-4 w-4 text-emerald-400" />
+          <div className="mb-4 flex items-center gap-2">
+            <Clock className="h-4 w-4 text-emerald-400" />
             <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500">
               Latest updates
             </h2>
           </div>
-          <div className="grid gap-2">
-            {commits.map((commit) => (
-              <div
-                key={commit.sha}
-                className="flex items-center justify-between gap-3 rounded-lg border border-zinc-800 bg-zinc-900/40 px-4 py-2.5 text-sm"
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {recentFiles.map((file) => (
+              <Link
+                key={file.path}
+                href={`/browse/${file.path}`}
+                className="group rounded-xl border border-zinc-800 bg-zinc-900/50 px-3 pb-3 pt-4 transition hover:border-zinc-600"
               >
-                <span className="flex min-w-0 items-center gap-2">
-                  <GitCommitHorizontal className="h-4 w-4 shrink-0 text-zinc-500" />
-                  <span className="truncate text-zinc-200">{commit.message}</span>
-                </span>
-                <span className="shrink-0 text-xs text-zinc-600">
-                  {new Date(commit.date).toLocaleDateString()}
-                </span>
-              </div>
+                <div className="flex items-center gap-3">
+                  <FileIcon name={file.name} className="h-6 w-6 shrink-0" />
+                  <p className="min-w-0 flex-1 truncate text-sm text-zinc-100 group-hover:text-white">
+                    {file.name}
+                  </p>
+                </div>
+                <div className="mt-2">
+                  <FileBadge name={file.name} />
+                </div>
+                <p className="mt-1 truncate text-[11px] text-zinc-500">{file.path}</p>
+                <p className="mt-0.5 truncate text-[11px] text-zinc-600">
+                  {new Date(file.date).toLocaleDateString()}
+                </p>
+              </Link>
             ))}
-          </div>
           </div>
         </section>
       )}

@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { PwaRegister } from "@/components/pwa-register";
 
 const nerdFont = localFont({
   src: [
@@ -27,6 +28,21 @@ export const metadata: Metadata = {
   title: "ASAS-WEB",
   description:
     "Browse, search and download the semester-wise archive of 2024 BCA (Honours) college files.",
+  applicationName: "ASAS-WEB",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "ASAS-WEB",
+    statusBarStyle: "black-translucent",
+  },
+  formatDetection: { telephone: false },
+  icons: {
+    apple: "/icons/apple-touch-icon.png",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#58a6ff",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -38,6 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Footer />
         <Analytics />
         <SpeedInsights />
+        <PwaRegister />
       </body>
     </html>
   );

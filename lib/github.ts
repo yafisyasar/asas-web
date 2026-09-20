@@ -117,23 +117,50 @@ export type CommitInfo = {
   date: string;
 };
 
-async function fetchRecentCommits(): Promise<CommitInfo[]> {
+export type RecentFile = {
+  path: string;
+  name: string;
+  date: string;
+};
+
+type CommitListItem = {
+  sha: string;
+  commit: { author: { name: string; date: string } };
+};
+
+type CommitDetail = {
+  files?: Array<{ filename: string; status: string }>;
+};
+
+async function fetchRecentFiles(): Promise<RecentFile[]> {
   try {
-    const page = await gh<Array<{ sha: string; commit: { message: string; author: { name: string; date: string } } }>>(
-      `/commits?per_page=5`
-    );
-    return page.map((c) => ({
-      sha: c.sha,
-      message: c.commit.message.split("\n")[0],
-      author: c.commit.author.name,
-      date: c.commit.author.date,
-    }));
+    const page = await gh<CommitListItem[]>(`/commits?per_page=10`);
+    const seen = new Set<string>();
+    const out: RecentFile[] = [];
+    for (const c of page) {
+      const detail = await gh<CommitDetail>(`/commits/${c.sha}`);
+      const files = detail.files ?? [];
+      for (const f of files) {
+        if (f.status === "removed") continue;
+        const filename = f.filename.replace(/^"+|"+$/g, "");
+        if (seen.has(filename)) continue;
+        seen.add(filename);
+        out.push({
+          path: filename,
+          name: filename.split("/").pop() ?? filename,
+          date: c.commit.author.date,
+        });
+        if (out.length >= 10) break;
+      }
+      if (out.length >= 10) break;
+    }
+    return out;
   } catch {
     return [];
   }
 }
 
-export const getRecentCommits = unstable_cache(fetchRecentCommits, ["asas-github-commits"], {
+export const getRecentFiles = unstable_cache(fetchRecentFiles, ["asas-github-recent-files"], {
   revalidate: CACHE_REVALIDATE,
   tags: [CACHE_TAG],
 });
