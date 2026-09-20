@@ -138,7 +138,7 @@ export default async function HomePage() {
                   <span className="truncate text-zinc-200">{commit.message}</span>
                 </span>
                 <span className="shrink-0 text-xs text-zinc-600">
-                  {commit.author} · {new Date(commit.date).toLocaleDateString()}
+                  {new Date(commit.date).toLocaleDateString()}
                 </span>
               </div>
             ))}
