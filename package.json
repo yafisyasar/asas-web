@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "jszip": "^3.10.2",
     "lucide-react": "^1.45.0",
     "mammoth": "^1.12.3",
