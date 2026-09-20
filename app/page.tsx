@@ -13,7 +13,7 @@ import { FolderGrid } from "@/components/folder-grid";
 import { FileList } from "@/components/file-list";
 
 export const metadata: Metadata = {
-  title: "ASAS-WEB — Archive of 2024 BCA (Honours)",
+  title: "ASAS-WEB",
   description:
     "Browse, search and download the semester-wise archive of 2024 BCA (Honours) college files.",
 };
