@@ -29,9 +29,9 @@ Built with **Next.js 16** (App Router) + **Tailwind CSS**, deployed on **Vercel*
 
 ## Stack
 
-| Layer    | Tech                                       |
-| -------- | ------------------------------------------ |
-| Frontend | Next.js 16, React 19, Tailwind CSS v4      |
-| Backend  | Next.js Route Handlers / Server Components |
-| Storage  | GitHub repo (via git data API + raw CDN)   |
-| Auth     | Shared admin password + HMAC-signed cookie |
+| Layer    | Tech                                        |
+| -------- | ------------------------------------------- |
+| Frontend | Next.js 16, React 19, Tailwind CSS v4       |
+| Backend  | Next.js Route Handlers / Server Components  |
+| Storage  | GitHub repo (via git data API + raw CDN)    |
+| Auth     | Shared admin password + HMAC-signed cookie  |
